@@ -22,7 +22,7 @@ export type GameState = {
 
 export type Mode = 'light' | 'dark';
 
-const API = 'http://localhost:3001/api';
+const API = '/api';
 
 function Game() {
   const [game, setGame] = useState<GameState | null>(null);

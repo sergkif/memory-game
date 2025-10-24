@@ -51,50 +51,43 @@ git clone <repository-url>
 cd memory-game
 ```
 
-2. **Set up environment variables**
+2. **Install all dependencies (monorepo setup)**
+```bash
+npm run install:all
+```
+
+3. **Set up environment variables**
 Create a `.env` file in the backend directory:
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 PORT=3001
 ```
 
-### Frontend Setup
+### Development
 
-1. **Navigate to frontend directory**
+1. **Start both frontend and backend in development mode**
+
+Option A - In separate terminals:
 ```bash
-cd frontend
+# Terminal 1 - Backend
+npm run dev:backend
+
+# Terminal 2 - Frontend  
+npm run dev:frontend
 ```
 
-2. **Install dependencies**
+Option B - Individual setup (original method):
 ```bash
-npm install
-```
-
-3. **Start development server**
-```bash
-npm run dev
-```
-
-The frontend will be available at `http://localhost:5173`
-
-### Backend Setup
-
-1. **Navigate to backend directory**
-```bash
+# Backend
 cd backend
-```
-
-2. **Install dependencies**
-```bash
 npm install
-```
+npm run dev
 
-3. **Start development server**
-```bash
+# Frontend (in another terminal)
+cd frontend
+npm install
 npm run dev
 ```
-
-The backend API will be available at `http://localhost:3001`
 
 ## 📁 Project Structure
 
@@ -117,7 +110,9 @@ memory-game/
 │   │   └── gemini.ts        # AI integration
 │   ├── package.json
 │   └── vercel.json          # Vercel deployment config
-└── README.md
+├── package.json
+├── README.md
+└── vercel.json
 ```
 
 ## 🎯 AI Difficulty Levels
@@ -147,11 +142,44 @@ memory-game/
 
 ## 🚀 Deployment
 
-This project is configured for deployment on Vercel:
+This project is configured for monorepo deployment on Vercel from the root directory:
 
-1. **Deploy Frontend**: Connect your repository to Vercel and deploy the frontend
-2. **Deploy Backend**: Deploy the backend API separately or as a serverless function
-3. **Environment Variables**: Set your `GEMINI_API_KEY` in Vercel's environment variables
+### Option 1: Deploy from Root (Recommended)
+
+1. **Connect Repository**: Connect your GitHub repository to Vercel
+2. **Root Directory**: Set the root directory to `.` (current directory)  
+3. **Build Command**: Leave as default (Vercel will use the build configuration from `vercel.json`)
+4. **Output Directory**: Leave as default (configured in `vercel.json` as `frontend/dist`)
+5. **Environment Variables**: Set the following in Vercel dashboard:
+   - `GEMINI_API_KEY=your_gemini_api_key_here`
+6. **Deploy**: Click deploy - Vercel will handle both frontend and backend
+
+### Option 2: Manual Deployment
+
+1. **Build the project**:
+```bash
+npm run install:all
+npm run build
+```
+
+2. **Deploy to Vercel**:
+```bash
+vercel --prod
+```
+
+### Environment Variables for Production
+
+In your Vercel project settings, add:
+- `GEMINI_API_KEY`: Your Google Gemini API key
+
+### Vercel Configuration
+
+The project includes a `vercel.json` configuration that:
+- Builds the frontend using `@vercel/static-build` 
+- Deploys the backend as serverless functions using `@vercel/node`
+- Routes API calls to `/api/*` to the backend
+- Serves the frontend for all other routes
+- Outputs the built frontend to `frontend/dist`
 
 ## 🙏 Acknowledgments
 

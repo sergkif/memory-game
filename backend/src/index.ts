@@ -120,6 +120,12 @@ app.get('/api/state', (_req, res) => {
   res.json({ success: true, game });
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+// Only start an HTTP listener in local/dev environments. On Vercel the
+// serverless function runtime invokes the exported handler instead.
+if (!process.env.VERCEL) {
+  app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+  });
+}
+
+export default app; // For Vercel serverless
